@@ -23,6 +23,5 @@ public class Main {
                 System.out.println("잘못된 입력입니다.");
                 break;
         }
-
     }
 }

@@ -1,3 +1,5 @@
+package member;
+
 import java.util.Scanner;
 
 public class SignIn {
