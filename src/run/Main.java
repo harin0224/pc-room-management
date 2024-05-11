@@ -1,3 +1,7 @@
+package run;
+
+import member.view.Member;
+
 import java.util.Scanner;
 
 public class Main {
@@ -15,6 +19,7 @@ public class Main {
                 break;
             case 2:
                 System.out.println("회원가입");
+                Member.signUp();
                 break;
             case 3:
                 System.out.println("로그아웃");
