@@ -16,6 +16,7 @@ public class Main {
         switch (scanner.nextInt()) {
             case 1:
                 System.out.println("로그인");
+
                 break;
             case 2:
                 System.out.println("회원가입");
