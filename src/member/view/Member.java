@@ -24,14 +24,14 @@ public class Member {
     }
 
     // 로그인
-    public static void signIn() {
-        // Scanner scan = new Scanner(System.in);
+    public static boolean signIn() {
         System.out.println("ID를 입력하세요: ");
         String id = scan.nextLine();
         System.out.println("비밀번호를 입력하세요: ");
         String pw = scan.nextLine();
-        memberController.searchMember(id, pw);
+        boolean isSuccess= memberController.searchMember(id, pw);
         currentId = id;
+        return isSuccess;
     }
     // 회원 탈퇴
 //    public static void DeleteMember(){

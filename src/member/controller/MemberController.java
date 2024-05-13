@@ -18,8 +18,8 @@ public class MemberController {
         memberService.deleteMember(id);
     }
 
-    public void searchMember(String id, String pw) {
-        memberService.searchMember(id, pw);
+    public boolean searchMember(String id, String pw) {
+        return memberService.searchMember(id, pw);
     }
 
     public void myPage() {

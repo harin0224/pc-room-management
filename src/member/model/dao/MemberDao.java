@@ -80,7 +80,7 @@ public class MemberDao {
     }
 
     // 회원 조회(로그인)
-    public void searchMember(String id, String pw){
+    public boolean searchMember(String id, String pw){
         String SignInSql = prop.getProperty("selectByIdPw");
         try {
             PreparedStatement SignInPs = conn.prepareStatement(SignInSql);
@@ -107,10 +107,13 @@ public class MemberDao {
                         updateRemainingTime(elapsedTimeInSeconds);
                     }
                 }, CHECK_INTERVAL, CHECK_INTERVAL);
+                return true;
 
 
             }else {
                 System.out.println("로그인 실패");
+                System.exit(0);
+                return false;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

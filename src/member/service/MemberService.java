@@ -17,8 +17,8 @@ public class MemberService {
         memberDao.deleteMember(id);
     }
 
-    public void searchMember(String id, String pw) {
-        memberDao.searchMember(id, pw);
+    public boolean searchMember(String id, String pw) {
+        return memberDao.searchMember(id, pw);
     }
 
     public void myPage() {
