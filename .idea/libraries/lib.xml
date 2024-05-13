@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/pc-room-management/lib/ojdbc6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/pc-room-management/lib/mysql-connector-j-8.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
