@@ -41,3 +41,5 @@ build/
 *.keystore
 *.jks
 *.p12
+
+resources/driver.properties
