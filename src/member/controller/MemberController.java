@@ -1,6 +1,7 @@
 package member.controller;
 
 import member.model.dao.MemberDao;
+import member.model.dto.MemberDto;
 import member.service.MemberService;
 
 public class MemberController {
@@ -10,16 +11,16 @@ public class MemberController {
         memberService = new MemberService();
     }
 
-    public void addMember(String id, String pw, String name, String number) {
-        memberService.addMember(id, pw, name, number);
+    public void addMember(MemberDto memberDto) {
+        memberService.addMember(memberDto);
     }
 
     public void deleteMember(String id) {
         memberService.deleteMember(id);
     }
 
-    public boolean searchMember(String id, String pw) {
-        return memberService.searchMember(id, pw);
+    public boolean searchMember(MemberDto memberDto) {
+        return memberService.searchMember(memberDto);
     }
 
     public void myPage() {

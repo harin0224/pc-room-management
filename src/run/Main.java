@@ -32,6 +32,7 @@ public class Main {
                             break;
                         case 3:
                             System.out.println("로그아웃");
+                            Member.signOut();
                             // 로그 아웃
                             break;
                         default:
@@ -39,10 +40,7 @@ public class Main {
                             break;
                     }
                     break;
-                }else{
-
                 }
-
             case 2:
                 System.out.println("회원가입");
                 Member.signUp();

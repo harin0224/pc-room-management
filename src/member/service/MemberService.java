@@ -1,6 +1,7 @@
 package member.service;
 
 import member.model.dao.MemberDao;
+import member.model.dto.MemberDto;
 
 public class MemberService {
     MemberDao memberDao = null;
@@ -9,16 +10,16 @@ public class MemberService {
         memberDao = new MemberDao();
     }
 
-    public void addMember(String id, String pw, String name, String number) {
-        memberDao.addMember(id, pw, name, number);
+    public void addMember(MemberDto memberDto) {
+        memberDao.addMember(memberDto);
     }
 
     public void deleteMember(String id) {
         memberDao.deleteMember(id);
     }
 
-    public boolean searchMember(String id, String pw) {
-        return memberDao.searchMember(id, pw);
+    public boolean searchMember(MemberDto memberDto) {
+        return memberDao.searchMember(memberDto);
     }
 
     public void myPage() {
@@ -29,7 +30,11 @@ public class MemberService {
         memberDao.updateMember(changeType, changeContent);
     }
 
-    public void signOut() {
-        memberDao.signOut();
+    // 사용 시간 수정(로그아웃)
+    public void signOut(){
+        System.out.println("로그아웃 되었습니다.");
+        // currentId = null;   // 아이디 비우기
+        System.exit(0); // 프로그램 종료
+
     }
 }

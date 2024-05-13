@@ -22,13 +22,13 @@ public class DBConnection {
                 prop.load(new FileReader("resources/driver.properties"));
                 Class.forName(prop.getProperty("driver"));
 
-                System.out.println("드라이버 등록성공");
+                // System.out.println("드라이버 등록성공");
 
 
                 String url = prop.getProperty("url");
 
                 conn = DriverManager.getConnection(url , prop);
-                System.out.println("conn=" + conn);// 성공하면 connection 값, 실패하면 null값
+                // System.out.println("conn=" + conn);// 성공하면 connection 값, 실패하면 null값
 
                 conn.setAutoCommit(true);
             } catch (ClassNotFoundException e) {

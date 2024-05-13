@@ -1,16 +1,14 @@
 package member.model.dao;
 
 import common.DBConnection;
+import member.model.dto.MemberDto;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static common.DBConnection.getConnection;
 
@@ -35,16 +33,16 @@ public class MemberDao {
 
 
     // 회원 추가(회원 가입)
-    public void addMember(String id, String pw, String name, String number) {
-        Statement stmt = null;// 실행할 쿼리
+    public void addMember(MemberDto memberDto) {
+        // Statement stmt = null;// 실행할 쿼리
         ResultSet rset = null;// Select 한후 결과값 받아올 객체
 
         // 중복 아이디 확인
         String dupIdSql = prop.getProperty("selectById");
         try {
             PreparedStatement dupIdPs = conn.prepareStatement(dupIdSql);
-            dupIdPs.setString(1, id);
-            stmt = conn.createStatement();
+            dupIdPs.setString(1, memberDto.getId());
+            // stmt = conn.createStatement();
             rset = dupIdPs.executeQuery();
 
 
@@ -53,10 +51,10 @@ public class MemberDao {
             }else { // 중복이 아니라면 회원 추가
                 String createMemberSql = prop.getProperty("createMember");
                 PreparedStatement createMemberPs = conn.prepareStatement(createMemberSql);
-                createMemberPs.setString(1, id);
-                createMemberPs.setString(2, pw);
-                createMemberPs.setString(3, name);
-                createMemberPs.setString(4, number);
+                createMemberPs.setString(1, memberDto.getId());
+                createMemberPs.setString(2, memberDto.getPw());
+                createMemberPs.setString(3, memberDto.getName());
+                createMemberPs.setString(4, memberDto.getNumber());
                 createMemberPs.executeUpdate();
                 System.out.println("회원가입이 완료되었습니다.");
             }
@@ -80,20 +78,20 @@ public class MemberDao {
     }
 
     // 회원 조회(로그인)
-    public boolean searchMember(String id, String pw){
+    public boolean searchMember(MemberDto memberDto){
         String SignInSql = prop.getProperty("selectByIdPw");
         try {
             PreparedStatement SignInPs = conn.prepareStatement(SignInSql);
-            SignInPs.setString(1, id);
-            SignInPs.setString(2, pw);
+            SignInPs.setString(1, memberDto.getId());
+            SignInPs.setString(2, memberDto.getPw());
             ResultSet rset = SignInPs.executeQuery();
             if(rset.next()) {
                 System.out.println("로그인 성공");
                 // 로그인 시간 기록
                 LocalDateTime loginTime = LocalDateTime.now();
-                currentId = id;
+                currentId = memberDto.getId();
                 // 로그인 성공 후 남은 시간 갱신 태스크 생성
-                Timer timer = new Timer();
+                timer = new Timer();
                 timer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
@@ -101,10 +99,10 @@ public class MemberDao {
                         LocalDateTime currentTime = LocalDateTime.now();
                         // 경과 시간 계산
                         Duration duration = Duration.between(loginTime, currentTime);
-                        long elapsedTimeInSeconds = duration.getSeconds();
+                        long useTime = duration.getSeconds();
 
-                        // 남은 시간 갱신
-                        updateRemainingTime(elapsedTimeInSeconds);
+                        // 남은 시간 alert 해주는 함수
+                        alertRemainingTime(useTime);
                     }
                 }, CHECK_INTERVAL, CHECK_INTERVAL);
                 return true;
@@ -120,28 +118,58 @@ public class MemberDao {
         }
     }
 
-    private void updateRemainingTime(long elapsedTimeInSeconds) {
+    private void alertRemainingTime(long useTime) {
+        Scanner scanner = new Scanner(System.in);
         // 남은 시간 갱신 로직 (가정)
-        int remainingTime = getRemainingTimeFromDatabase(currentId);
-        remainingTime -= elapsedTimeInSeconds;
-
+        int remainingTime = getRemainingTime();
+        remainingTime -= 60;
+        // System.out.println("remainingTime: " + remainingTime + "useTime: " + useTime);
+        PreparedStatement updateTimePs = null;
+        String updateTimeSql = prop.getProperty("updateTime");
+        try {
+            updateTimePs = conn.prepareStatement(updateTimeSql);
+            updateTimePs.setInt(1, remainingTime);
+            updateTimePs.setString(2, currentId);
+            updateTimePs.executeUpdate();
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
         if (remainingTime <= 0) {
             // 남은 시간이 0 이하이면 타이머 종료 및 프로그램 종료
             timer.cancel();
-            System.out.println("남은 시간이 모두 소진되었습니다. 프로그램을 종료합니다.");
+            System.out.println("남은 시간이 모두 소진되었습니다. 충전하시겠습니까?");
+            System.out.println("1. Y");
+            System.out.println("2. N");
+            scanner.nextLine();
+
+            String charge = scanner.nextLine();
+            if(charge.equals("1")) {
+                // 충전하는 메소드 들어감
+            }else {
+                System.out.println("프로그램을 종료합니다.");
+            }
             System.exit(0);
+
         } else {
-            // 남은 시간 업데이트
-            // 여기에 사용자의 남은 시간을 업데이트하는 로직 추가
-            // 예: 데이터베이스 업데이트
-            System.out.println("사용자 " + currentId + "의 남은 시간을 " + remainingTime + "초만큼 갱신했습니다.");
+            // 남은 시간 alert
+            System.out.println(remainingTime / 60 + "분 남았습니다.");
         }
     }
-    // 사용자의 남은 시간을 데이터베이스에서 조회하는 메서드 (가정)
-    private int getRemainingTimeFromDatabase(String userId) {
-        // 여기에 사용자의 남은 시간을 데이터베이스에서 조회하는 로직 추가
-        // 가정으로 임시 구현
-        return 300; // 예시로 5분으로 설정
+    // 사용자의 남은 시간을 데이터베이스에서 조회하는 메서드
+    private int getRemainingTime() {
+        PreparedStatement getTimePs = null; // 실행할 쿼리
+        ResultSet rset = null; // Select 한후 결과값 받아올 객체
+        String getTimeSql = prop.getProperty("selectTime");
+        try{
+            getTimePs = conn.prepareStatement(getTimeSql);
+            getTimePs.setString(1, currentId);
+            rset = getTimePs.executeQuery();
+            if(rset.next()) {
+                return rset.getInt("time");
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }return 0;
     }
     
     // 내 정보
@@ -201,13 +229,5 @@ public class MemberDao {
     }
 
 
-
-    // 사용 시간 수정(로그아웃)
-    public void signOut(){
-        // String SignOutSql = prop.getProperty("selectById");
-        currentId = null;   // 아이디 비우기
-        // timer.cancel();   // 타이머 종료 ?
-
-    }
 
 }
