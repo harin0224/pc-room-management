@@ -146,16 +146,26 @@ public class MemberDao {
     
     // 내 정보
     public void myPage() {
-        Statement stmt = null;// 실행할 쿼리
-        ResultSet rset = null;// Select 한후 결과값 받아올 객체
+        PreparedStatement myPagePs = null; // 실행할 쿼리
+        ResultSet rset = null; // Select 한후 결과값 받아올 객체
         String myPageSql = prop.getProperty("selectById");
 
         try {
-            PreparedStatement myPagePs = conn.prepareStatement(myPageSql);
+            myPagePs = conn.prepareStatement(myPageSql);
             myPagePs.setString(1, currentId);
-            stmt = conn.createStatement();
-            rset = stmt.executeQuery(myPageSql);
-            System.out.println(rset);
+            rset = myPagePs.executeQuery();
+            while (rset.next()) {
+                String id = rset.getString("id");
+                String name = rset.getString("name");
+                String num = rset.getString("num");
+                int time = rset.getInt("time");
+
+                // 가져온 데이터 출력 또는 처리
+                System.out.println("ID: " + id);
+                System.out.println("이름: " + name);
+                System.out.println("번호: " + num);
+                System.out.println("사용 시간: " + time);
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
