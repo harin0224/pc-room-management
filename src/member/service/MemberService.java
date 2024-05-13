@@ -13,8 +13,8 @@ public class MemberService {
         memberDao.addMember(id, pw, name, number);
     }
 
-    public void deleteMember(String id, String pw) {
-        memberDao.deleteMember(id, pw);
+    public void deleteMember(String id) {
+        memberDao.deleteMember(id);
     }
 
     public void searchMember(String id, String pw) {
@@ -29,7 +29,7 @@ public class MemberService {
         memberDao.updateMember(changeType, changeContent);
     }
 
-    public void updateTime(String id, int time) {
-        memberDao.updateTime(id, time);
+    public void signOut() {
+        memberDao.signOut();
     }
 }

@@ -34,9 +34,6 @@ public class MemberDao {
     }
 
 
-
-
-
     // 회원 추가(회원 가입)
     public void addMember(String id, String pw, String name, String number) {
         Statement stmt = null;// 실행할 쿼리
@@ -48,7 +45,8 @@ public class MemberDao {
             PreparedStatement dupIdPs = conn.prepareStatement(dupIdSql);
             dupIdPs.setString(1, id);
             stmt = conn.createStatement();
-            rset = stmt.executeQuery(dupIdSql);
+            rset = dupIdPs.executeQuery();
+
 
             if(rset.next()) {   // 중복이라면
                 System.out.println("이미 존재하는 아이디입니다.");
@@ -68,13 +66,12 @@ public class MemberDao {
     }
 
     // 회원 삭제(회원 탈퇴)
-    public void deleteMember(String id, String pw) {
+    public void deleteMember(String id) {
 
         String deleteMemSql = prop.getProperty("deleteMember");
         try {
             PreparedStatement deleteMemPs = conn.prepareStatement(deleteMemSql);
             deleteMemPs.setString(1, id);
-            deleteMemPs.setString(1, pw);
             deleteMemPs.executeUpdate();
             System.out.println("회원 탈퇴가 완료되었습니다.");
         } catch (SQLException e) {
@@ -112,10 +109,6 @@ public class MemberDao {
                 }, CHECK_INTERVAL, CHECK_INTERVAL);
 
 
-                // 사용 시간 관련 기능
-                // 남은 시간이 0이면 로그인 X
-
-
             }else {
                 System.out.println("로그인 실패");
             }
@@ -148,7 +141,7 @@ public class MemberDao {
         return 300; // 예시로 5분으로 설정
     }
     
-    // 마이페이지
+    // 내 정보
     public void myPage() {
         Statement stmt = null;// 실행할 쿼리
         ResultSet rset = null;// Select 한후 결과값 받아올 객체
@@ -197,8 +190,11 @@ public class MemberDao {
 
 
     // 사용 시간 수정(로그아웃)
-    public void updateTime(String id, int time){
-        String SignOutSql = prop.getProperty("selectById");
+    public void signOut(){
+        // String SignOutSql = prop.getProperty("selectById");
+        currentId = null;   // 아이디 비우기
+        // timer.cancel();   // 타이머 종료 ?
+
     }
-    
+
 }

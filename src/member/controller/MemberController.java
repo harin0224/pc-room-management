@@ -14,8 +14,8 @@ public class MemberController {
         memberService.addMember(id, pw, name, number);
     }
 
-    public void deleteMember(String id, String pw) {
-        memberService.deleteMember(id, pw);
+    public void deleteMember(String id) {
+        memberService.deleteMember(id);
     }
 
     public void searchMember(String id, String pw) {
@@ -30,7 +30,7 @@ public class MemberController {
         memberService.updateMember(changeType, changeContent);
     }
 
-    public void updateTime(String id, int time) {
-        memberService.updateTime(id, time);
+    public void signOut(){
+        memberService.signOut();
     }
 }
