@@ -137,18 +137,20 @@ public class MemberDao {
         if (remainingTime <= 0) {
             // 남은 시간이 0 이하이면 타이머 종료 및 프로그램 종료
             timer.cancel();
-            System.out.println("남은 시간이 모두 소진되었습니다. 충전하시겠습니까?");
-            System.out.println("1. Y");
-            System.out.println("2. N");
-            scanner.nextLine();
-
-            String charge = scanner.nextLine();
-            if(charge.equals("1")) {
-                // 충전하는 메소드 들어감
-            }else {
-                System.out.println("프로그램을 종료합니다.");
-            }
+            System.out.println("남은 시간이 모두 소진되었습니다.");
             System.exit(0);
+
+//            System.out.println("1. Y");
+//            System.out.println("2. N");
+//            scanner.nextLine();
+
+//            String charge = scanner.nextLine();
+//            if(charge.equals("1")) {
+//                // 충전하는 메소드 들어감
+//            }else {
+//                System.out.println("프로그램을 종료합니다.");
+//            }
+//            System.exit(0);
 
         } else {
             // 남은 시간 alert
